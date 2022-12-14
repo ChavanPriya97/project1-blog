@@ -30,7 +30,6 @@ const createBlog = async function(req,res){
         if(tags){
             if(!isValidString(tags)) return res.status(400).send({status : false , message : "please provide valid tags"})
         }
-
         if(subcategory){
             if(!isValidString(subcategory)) return res.status(400).send({status : false , message : "please provide valid subcategory"})
         }
@@ -66,7 +65,7 @@ const updateBlog = async function(req,res){
         const{title, body, tags,subcategory} = data
 
         const blog = await blogModel.findOneAndUpdate(
-            {_id : blogId,isDeleted :false  },
+            {_id : blogId,isDeleted :false },
             {
             title : title , 
             body :body,
@@ -120,9 +119,9 @@ const deleteByQuery  = async function(req,res){
         }
 
         if (count == 0) return res.status(404).json({ status: false, message: "Unauthorised author" });
-
+    
         const blogs =  await  blogModel.findOneAndUpdate(
-            {isDeleted :false , isPublished : true ,authorId : findBlog.authorId},
+            {isDeleted :false , isPublished : true ,authorId : checkId.authorId},
             {$set :{isDeleted : true,deletedAt : new Date(Date.now())}},
             {new : true}
         )
